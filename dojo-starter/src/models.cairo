@@ -1,4 +1,4 @@
-use starknet::ContractAddress;
+use starknet::{ContractAddress, contract_address_const};
 
 #[derive(Copy, Drop, Serde)]
 #[dojo::model]
@@ -139,8 +139,10 @@ mod tests {
 //     Flee,
 // }
 
+// const COMMANDER_MONSTER : ContractAddress = contract_address_const::<'xxxx'>();
+
 // ---- entity----
-#[derive(Drop, Serde)]
+#[derive(Copy, Drop, Serde)]
 #[dojo::model]
 pub struct Entity {
     #[key]
@@ -149,7 +151,7 @@ pub struct Entity {
     pub count: u128,
 }
 
-#[derive(Drop, Serde)]
+#[derive(Copy, Drop, Serde)]
 #[dojo::model]
 pub struct Counter {
     #[key]
@@ -158,41 +160,46 @@ pub struct Counter {
 }
 
 // 记录一个英雄instance的信息，包括指挥官，经验值等，不包括MP, HP
-#[derive(Drop, Serde)]
+#[derive(Copy, Drop, Serde)]
 #[dojo::model]
 pub struct Hero {
     #[key]
-    pub heroId: felt252,
-    // 单独做 struct??
-    // monster commanded by singlecontractaddress::<moster>
+    pub heroId: felt252, // 类似nftid
     pub commander: ContractAddress,
     pub exp: u32,
+
+    // battle info
+    pub battleId: felt252,
+    pub currRound: u128,
+
+    pub health: u32, // hp
+    pub mana: u32,   // mp
 }
 
 // 记录一个英雄instance有关battle的信息，包括所处battleId，当前round，
-#[derive(Drop, Serde)]
-#[dojo::model]
-pub struct HeroBattle {
-    #[key]
-    pub heroId: felt252,
-    pub battleId: felt252,
-    pub currRound: u128,
-}
+// #[derive(Copy, Drop, Serde)]
+// #[dojo::model]
+// pub struct HeroBattle {
+//     #[key]
+//     pub heroId: felt252,
+//     pub battleId: felt252,
+//     pub currRound: u128,
+// }
 
 // 记录一个英雄class的信息，包括攻击力，防御力，最大生命值，最大法力值，暴击率等
 // ex., heroId -> heroType = EntityType.get(heroId) -> HeroSpecs.get(heroType)
 // init: heroType -> HeroSpecs
-#[derive(Drop, Serde)]
+#[derive(Copy, Drop, Serde)]
 #[dojo::model]
 pub struct HeroSpecs {
     #[key]
-    pub heroType: felt252,
+    pub heroType: felt252,  // 类似nft contract address
     pub attack: u32,
     pub defense: u32,
     pub maxHealth: u32,
     pub maxMana: u32,
     pub critChance: u32,
-    pub skillTypes: Array<felt252>,
+    // pub skillTypes: Array<felt252>,
 }
 
 // #[derive(Drop, Serde)]
@@ -218,23 +225,23 @@ pub struct Battle {
 }
 
 // 记录一个英雄的HP
-#[derive(Drop, Serde)]
-#[dojo::model]
-pub struct Health {
-    #[key]
-    pub heroId: felt252,
-    pub health: u32,
-}
+// #[derive(Copy, Drop, Serde)]
+// #[dojo::model]
+// pub struct Health {
+//     #[key]
+//     pub heroId: felt252,
+//     pub health: u32,
+// }
 
 // 记录一个英雄的MP
 // every attack will increase Mana by 1
-#[derive(Drop, Serde)]
-#[dojo::model]
-pub struct Mana {
-    #[key]
-    pub heroId: felt252,
-    pub mana: u32,
-}
+// #[derive(Copy, Drop, Serde)]
+// #[dojo::model]
+// pub struct Mana {
+//     #[key]
+//     pub heroId: felt252,
+//     pub mana: u32,
+// }
 
 // // every hero's own action will check if defend round is active, if not, delete the entry
 // #[derive(Drop, Serde)]
@@ -248,16 +255,15 @@ pub struct Mana {
 
 // 记录一个dungeon & evel class的信息，包括怪物数量，怪物类型等
 // mint random monster for dungeonId and level
-#[derive(Drop, Serde)]
+#[derive( Drop, Serde)]
 #[dojo::model]
 pub struct DungeonLevelSpecs {
     #[key]
     pub dungeonType: felt252,
-    #[key]
-    pub level: u32,
+
+    pub level: u32,  //
     pub monsterAmount: u32,
     pub monsterTypes: Array<felt252>,
-
 }
 
 

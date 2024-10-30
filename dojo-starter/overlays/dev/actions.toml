@@ -1,0 +1,5 @@
+tag = "dojo_starter-actions"
+writes = [
+    "dojo_starter-HeroSpecs",
+    "dojo_starter-DungeonLevelSpecs",
+]
