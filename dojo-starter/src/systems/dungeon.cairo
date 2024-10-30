@@ -18,7 +18,7 @@ mod dungeon {
     #[abi(embed_v0)]
     impl DungeonImpl of IDungeon<ContractState> {
         // TOO MUCH GAS??
-        fn enterDungeon(ref world: IWorldDispatcher, dungeonType: felt252,heroIds: Array<felt252>) {
+        fn enterDungeon(ref world: IWorldDispatcher, dungeonType: felt252,heroIds: Array<felt252>) { 
             assert!(heroIds.len() > 0, "NotMinHero");
             assert!(heroIds.len() <= 3, "maxHeroesReached");
             let commander = get_caller_address();

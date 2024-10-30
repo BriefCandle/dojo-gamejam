@@ -144,13 +144,13 @@ mod tests {
 // ---- entity----
 #[derive(Copy, Drop, Serde)]
 #[dojo::model]
-pub struct Entity {
+pub struct EntityType {
     #[key]
     pub entityId: felt252,
     pub entityType: felt252,
     pub count: u128,
 }
-
+// useEntityQuery([HasValue(Hero, {commander: account.address})]).map((entity)=> getComponetValue(Hero, entity)?.heroId)
 #[derive(Copy, Drop, Serde)]
 #[dojo::model]
 pub struct Counter {
@@ -165,11 +165,11 @@ pub struct Counter {
 pub struct Hero {
     #[key]
     pub heroId: felt252, // 类似nftid
-    pub commander: ContractAddress,
+    pub commander: ContractAddress,  // maybe no one
     pub exp: u32,
 
     // battle info
-    pub battleId: felt252,
+    pub battleId: felt252, 
     pub currRound: u128,
 
     pub health: u32, // hp
@@ -199,6 +199,7 @@ pub struct HeroSpecs {
     pub maxHealth: u32,
     pub maxMana: u32,
     pub critChance: u32,
+    // pub isActived: bool,
     // pub skillTypes: Array<felt252>,
 }
 
