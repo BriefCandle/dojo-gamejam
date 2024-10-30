@@ -1,5 +1,12 @@
 tag = "dojo_starter-actions"
 writes = [
+    "dojo_starter-Hero",
     "dojo_starter-HeroSpecs",
     "dojo_starter-DungeonLevelSpecs",
+    "dojo_starter-Counter",
+    "dojo_starter-EntityType",
+    "dojo_starter-Battle",
+
+
+
 ]
