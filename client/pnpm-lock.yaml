@@ -34,6 +34,9 @@ dependencies:
   mobx:
     specifier: ^6.13.2
     version: 6.13.2
+  phaser:
+    specifier: ^3.86.0
+    version: 3.86.0
   proxy-deep:
     specifier: ^3.1.1
     version: 3.1.1
@@ -3932,6 +3935,12 @@ packages:
 
   /pathval@1.1.1:
     resolution: {integrity: sha512-Dp6zGqpTdETdR63lehJYPeIOqpiNBNtc7BpWSLrOje7UaIsE5aY92r/AunQA7rsXvet3lrJ3JnZX29UPTKXyKQ==}
+    dev: false
+
+  /phaser@3.86.0:
+    resolution: {integrity: sha512-A7rog3GhXYcWsPimteQmudyY6W0fx0eviOoo9Cwpzae1RPeJBDkhmWv5IFrQO9dL+T907E4dprQPnd2D4WhoEw==}
+    dependencies:
+      eventemitter3: 5.0.1
     dev: false
 
   /picocolors@1.1.1:
