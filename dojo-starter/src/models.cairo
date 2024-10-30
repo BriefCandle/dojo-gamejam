@@ -86,20 +86,197 @@ mod tests {
         assert(position.is_equal(Vec2 { x: 420, y: 0 }), 'not equal');
     }
 }
+// modifier
+//  - AccessControl: isCommander
+//  - BattleControl: sameBattle, notInBattle
+
+// 1） 初始化英雄，初始化地牢，mint英雄，进入地牢，退出地牢等system
+// initHeroType(heroType, HeroSpecs): 
+// initDungeonType(dungeonType, level, DungeonSpecs)
+// mintHero(heroType)
+// enterDungeon(heroIds, dungeonType)
+// mockWinBattle(battleId) -> 
+// mockDefeatBattle(battleId) ->
+// exitDungeon(battleId) -> 
+
+
+
+// _mint(entityType) function for entity: accumulate counter for entityType and add entityType
+// mintHero(heroType): mint(), init Hero without setting HeroBattle
+
+// enterDungeon(heroIds, dungeonType): 
+//  --- isCommander for ALL heroIds
+//  --- "maxHeroesReached": require heroIds.length <= 4
+//  --- "heroInBattle", require ALL heroes NOT in battle, i.e., HeroBattle's battleId != 0
+//  --- felt252 battleId = mint(felt252("BATTLE")) 
+//  --- Battle.set(battleId, currRound: 1, heroIds: heroIds)
+//  --- HeroBattle.set(heroId, battleId: battleId, currRound: 1)
+//  --- _mintDungeonHero(dungeonType, level, battleId) ...
+
+// mockWinBattle(battleId):
+// --- isDungeonCommander for ALL heroIds = Battle.get(battleId).heroIds == DUNGEON_COMMANDER
+// --- _burnDungeonHero(heroId): 
+
+// exitDungeon(battleId):
+// --- isCommander for ALL heroIds = Battle.get(battleId).heroIds
+// --- Battle.delete(battleId)
+// --- HeroBattle.delete(heroId) for heroId in heroIds
+
+// leaveBattle(heroId):
+//  --- check hero.battleId != 0; else revert
+//  --- 如果还有地牢英雄，并且没有执行action, revert
+//  --- _burnHero(heroId), 
+
+
+// #[derive(Serde, Copy, Drop, Introspect)]
+// pub enum Action {
+//     None,
+//     Attack,
+//     Defend,
+//     Skill,
+//     Recruit,
+//     Use,
+//     Flee,
+// }
+
+// ---- entity----
+#[derive(Drop, Serde)]
+#[dojo::model]
+pub struct Entity {
+    #[key]
+    pub entityId: felt252,
+    pub entityType: felt252,
+    pub count: u128,
+}
+
+#[derive(Drop, Serde)]
+#[dojo::model]
+pub struct Counter {
+    #[key]
+    pub entityType: felt252,
+    pub count: u128,
+}
+
+// 记录一个英雄instance的信息，包括指挥官，经验值等，不包括MP, HP
+#[derive(Drop, Serde)]
+#[dojo::model]
+pub struct Hero {
+    #[key]
+    pub heroId: felt252,
+    // 单独做 struct??
+    // monster commanded by singlecontractaddress::<moster>
+    pub commander: ContractAddress,
+    pub exp: u32,
+}
+
+// 记录一个英雄instance有关battle的信息，包括所处battleId，当前round，
+#[derive(Drop, Serde)]
+#[dojo::model]
+pub struct HeroBattle {
+    #[key]
+    pub heroId: felt252,
+    pub battleId: felt252,
+    pub currRound: u128,
+}
+
+// 记录一个英雄class的信息，包括攻击力，防御力，最大生命值，最大法力值，暴击率等
+// ex., heroId -> heroType = EntityType.get(heroId) -> HeroSpecs.get(heroType)
+// init: heroType -> HeroSpecs
+#[derive(Drop, Serde)]
+#[dojo::model]
+pub struct HeroSpecs {
+    #[key]
+    pub heroType: felt252,
+    pub attack: u32,
+    pub defense: u32,
+    pub maxHealth: u32,
+    pub maxMana: u32,
+    pub critChance: u32,
+    pub skillTypes: Array<felt252>,
+}
 
 // #[derive(Drop, Serde)]
 // #[dojo::model]
-// pub struct Entity {
+// pub struct SkillSpecs {
 //     #[key]
-//     pub entityId: felt252,
-//     pub entityType: felt252,
-//     pub count: u128,
+//     pub skillType: felt252,
+//     pub mana: u32,
+//     pub critChance: u32,
+//     pub damage: u32,
+//     pub heal: u32,
+//     pub healSelf: bool,
 // }
 
+// 记录一个battle instance的信息，包括当前round，参与英雄们等
+#[derive(Drop, Serde, Introspect)]
+#[dojo::model]
+pub struct Battle {
+    #[key]
+    pub battleId: felt252,
+    pub currRound: u128,
+    pub heroIds: Array<felt252>,
+}
+
+// 记录一个英雄的HP
+#[derive(Drop, Serde)]
+#[dojo::model]
+pub struct Health {
+    #[key]
+    pub heroId: felt252,
+    pub health: u32,
+}
+
+// 记录一个英雄的MP
+// every attack will increase Mana by 1
+#[derive(Drop, Serde)]
+#[dojo::model]
+pub struct Mana {
+    #[key]
+    pub heroId: felt252,
+    pub mana: u32,
+}
+
+// // every hero's own action will check if defend round is active, if not, delete the entry
 // #[derive(Drop, Serde)]
 // #[dojo::model]
-// pub struct Counter {
+// pub struct Defend {
 //     #[key]
-//     pub entityType: felt252,
-//     pub count: u128,
+//     pub heroId: felt252,
+//     pub defendAdded: u32,
+//     pub activeRound: u128,
 // }
+
+// 记录一个dungeon & evel class的信息，包括怪物数量，怪物类型等
+// mint random monster for dungeonId and level
+#[derive(Drop, Serde)]
+#[dojo::model]
+pub struct DungeonLevelSpecs {
+    #[key]
+    pub dungeonType: felt252,
+    #[key]
+    pub level: u32,
+    pub monsterAmount: u32,
+    pub monsterTypes: Array<felt252>,
+
+}
+
+
+//  --- canPlayerAction || canDungoneAction: 地牢英雄需要在所有玩家英雄完成action后才能进行action
+// 最后一个地牢英雄完成action后，set Battle.currRound += 1
+// takeAction(heroId, action, targetId):
+//  --- require heroId in same battle with targetId
+//  --- require heroId's currRound == battleId's currRound
+//  --- accumulate battleRound for heroId
+// attack(heroId, targetId):
+// defend(heroId):
+// skill(heroId, skillId, targetId):
+
+// ?? _burnHero(heroId):
+//  --- check hero.health == 0; else return
+//  --- remove from battle
+//  --- _burn(entityId)
+
+// 从battle脱出英雄
+// _returnHero(heroId):
+//  --- check hero.battleId != 0; else return
+//  --- remove hero's battleId & currRound
