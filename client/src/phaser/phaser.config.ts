@@ -3,9 +3,9 @@ import { SpinePlugin } from "@esotericsoftware/spine-phaser";
 
 const config: Phaser.Types.Core.GameConfig = {
   type: Phaser.WEBGL,
-  premultipliedAlpha: false,
+  premultipliedAlpha: true,
   parent: "phaser-container",
-  backgroundColor: "#1a103c",
+  backgroundColor: "#808080", //#808080 for gray background
   scale: {
     mode: Phaser.Scale.ScaleModes.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
