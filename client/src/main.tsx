@@ -7,7 +7,7 @@ import { DojoProvider } from "./dojo/DojoContext.tsx";
 import { setup } from "./dojo/setup.ts";
 import Phaser from "phaser";
 import { GameScene } from "./phaser/scenes/GameScene.tsx";
-import config from "./phaser/scenes/phaser.config.ts";
+import config from "./phaser/phaser.config.ts";
 
 const rootElement = document.getElementById("root");
 if (!rootElement) throw new Error("React root not found");
