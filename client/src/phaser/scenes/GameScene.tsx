@@ -83,11 +83,13 @@ export class GameScene extends Phaser.Scene {
       world,
       [HasValue(Hero, { commander: BigInt(this.account?.address ?? 0n) })],
       ({ entity, type }) => {
+        const index = Object.keys(this.nikkes).length;
         this.nikkes[entity] = new Nikke(
           this,
           this.components,
           this.network,
-          entity
+          entity,
+          index
         );
       }
     );

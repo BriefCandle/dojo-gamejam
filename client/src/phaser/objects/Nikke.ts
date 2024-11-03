@@ -16,6 +16,7 @@ export class Nikke {
   network: SetupResult["client"];
 
   nikke: Entity;
+  index: number;
   isPlayer: boolean;
 
   isCovered: boolean;
@@ -28,6 +29,7 @@ export class Nikke {
     components: SetupResult["clientComponents"],
     network: SetupResult["client"],
     nikke: Entity,
+    index: number,
     isPlayer?: boolean
   ) {
     this.scene = scene;
@@ -35,9 +37,12 @@ export class Nikke {
     this.network = network;
 
     this.nikke = nikke;
+    this.index = index;
     this.isPlayer = isPlayer ?? true;
 
-    const nikkeType = "aria";
+    const x = (this.scene.scale.width / 5) * (this.index + 1);
+    // Align with the bottom of the screen
+    const y = (this.scene.scale.height / 4) * 4 - 50;
     this.coverSpine = this.scene.add
       .spine(
         this.scene.scale.width / 4, // Align with the left of the screen
@@ -50,12 +55,7 @@ export class Nikke {
       .setDepth(1)
       .setVisible(false);
     this.aimSpine = this.scene.add
-      .spine(
-        this.scene.scale.width / 4,
-        (this.scene.scale.height / 4) * 4,
-        `${nikkeType}_aim_skel`,
-        `${nikkeType}_aim_atlas`
-      )
+      .spine(x, y, `${nikkeType}_aim_skel`, `${nikkeType}_aim_atlas`)
       .setOrigin(0, 1)
       .setDepth(1)
       .setScale(0.18)

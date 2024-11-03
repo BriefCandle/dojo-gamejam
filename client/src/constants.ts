@@ -13,5 +13,6 @@ export const nikkeNameMap = [
 // attack types
 export const PRAYNSPRAY = toHex("PRAYNSPRAY", { size: 31 }) as Entity;
 export const SHARPSHOOT = toHex("SHARPSHOOT", { size: 31 }) as Entity;
+export const SUPERATTACK = toHex("SUPERATTACK", { size: 31 }) as Entity;
 
 export const TARGET = toHex("TARGET", { size: 31 }) as Entity;
