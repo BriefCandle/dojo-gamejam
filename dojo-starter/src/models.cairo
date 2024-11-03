@@ -194,6 +194,7 @@ pub struct AttackEvent {
     pub targetId: felt252,
     pub prevHealth: u32,
     pub currHealth: u32,
+    pub attackType: felt252
 }
 
 

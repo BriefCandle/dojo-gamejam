@@ -23,6 +23,8 @@ trait IActions {
 
     fn prayNSpray(ref world: IWorldDispatcher, heroId: felt252, targetId: felt252);
 
+    fn superAttack(ref world: IWorldDispatcher, heroId: felt252, targetId: felt252);
+
     // fn enemyAttack(ref world: IWorldDispatcher, enemyId: felt252, heroId: felt252);
 
     // fn exitDungeon(ref worldL: IWorldDispatcher, battleId: felt252);
@@ -90,6 +92,31 @@ mod actions {
 
     #[abi(embed_v0)]
     impl ActionsImpl of IActions<ContractState> {
+        fn superAttack(ref world: IWorldDispatcher, heroId: felt252, targetId: felt252) {
+            let caller = get_contract_address();
+            let hero = get!(world, heroId, Hero);
+            // assert(hero.commander == caller, 'caller not commander');
+
+            // assert hero in samge battle with targetId
+
+            let target = get!(world, targetId, Hero);
+            let newHealth = if target.health > 20 { target.health - 20 } else { 0 };
+
+            // set!(world, (
+            //     Hero {
+            //         heroId: targetId,
+            //         health: newHealth,
+            //     }
+            // ))
+
+            emit!(world, AttackEvent {
+                heroId,
+                targetId,
+                prevHealth: target.health,
+                currHealth: newHealth,
+                attackType: 'superAttack'_felt252,
+            })
+        }
         fn sharpShoot(ref world: IWorldDispatcher, heroId: felt252, targetId: felt252) {
             let caller = get_contract_address();
             let hero = get!(world, heroId, Hero);
@@ -115,6 +142,7 @@ mod actions {
                 targetId,
                 prevHealth: target.health,
                 currHealth: newHealth,
+                attackType: 'sharpShoot'_felt252,
             })
         }
 
@@ -145,6 +173,7 @@ mod actions {
                 targetId,
                 prevHealth: target.health,
                 currHealth: newHealth,
+                attackType: 'prayNSpray'_felt252,
             })
         }
 
@@ -200,7 +229,7 @@ mod actions {
             ))
         }
 
-        // sozo execute dojo_starter-actions init -c
+        // sozo execute dojo_starter-actions init
         fn init(ref world: IWorldDispatcher) {
             // init heroSpecs
             // WHY CANNOT DO IT IN LOOP??????
