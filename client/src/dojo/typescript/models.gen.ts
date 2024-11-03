@@ -146,6 +146,13 @@ export interface HeroSpecs {
   // skillTypes: bigint[];
 }
 
+export interface AttackEvent {
+  heroId: bigint;
+  targetId: bigint;
+  prevHealth: number;
+  currHealth: number;
+}
+
 export function defineContractComponents(world: World) {
   return {
     HeroSpecs: (() => {
@@ -181,6 +188,24 @@ export function defineContractComponents(world: World) {
             namespace: "dojo_starter",
             name: "HeroCovered",
             types: ["felt252", "bool"],
+          },
+        }
+      );
+    })(),
+    AttackEvent: (() => {
+      return defineComponent(
+        world,
+        {
+          heroId: RecsType.BigInt,
+          targetId: RecsType.BigInt,
+          prevHealth: RecsType.Number,
+          currHealth: RecsType.Number,
+        },
+        {
+          metadata: {
+            namespace: "dojo_starter",
+            name: "AttackEvent",
+            types: ["felt252", "felt252", "u32", "u32"],
           },
         }
       );

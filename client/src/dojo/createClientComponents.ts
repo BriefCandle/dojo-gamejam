@@ -17,5 +17,12 @@ export function createClientComponents({
     ToggledOn: defineComponent(world, {
       value: Type.Boolean,
     }),
+    NikkeAttack: defineComponent(world, {
+      attackType: Type.Entity,
+      // target: Type.Entity,
+    }),
+    SelectedHost: defineComponent(world, {
+      value: Type.Entity,
+    }),
   };
 }
