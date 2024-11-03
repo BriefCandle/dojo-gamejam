@@ -11,6 +11,7 @@ import {
 import { SetupResult } from "../../dojo/setup";
 import { SpineGameObject } from "@esotericsoftware/spine-phaser";
 import { TARGET } from "../../constants";
+import { Hex, hexToString } from "viem";
 
 export class Enemy {
   scene: Phaser.Scene;
@@ -46,20 +47,18 @@ export class Enemy {
     this.mana = hero?.mana ?? 0;
     console.log("enemy", this.health, this.mana);
 
+    const x = (this.scene.scale.width / 3) * 2;
+    const y = (this.scene.scale.height / 4) * 2;
     this.enemySpine = this.scene.add
-      .spine(
-        (this.scene.scale.width / 3) * 2,
-        (this.scene.scale.height / 4) * 3,
-        "enemy_skel",
-        "enemy_atlas"
-      )
-      .setOrigin(0, 1)
-      .setScale(0.18);
+      .spine(x, y, "enemy_skel", "enemy_atlas")
+      .setOrigin(0.5, 0.5)
+      .setScale(0.1);
     this.enemySpine.animationState.setAnimation(1, "idle", true);
 
     this.enemySpine.setInteractive();
     this.enemySpine.on("pointerdown", () => {
       // onClick?.(this.enemy);
+      console.log("enemy clicked");
       this.selectedOutline ? this.unselect() : this.select();
     });
 
@@ -70,9 +69,13 @@ export class Enemy {
         if (type === UpdateType.Exit) return;
         const attackEvent = getComponentValue(AttackEvent, entity)!;
         if (attackEvent.targetId !== BigInt(this.enemy)) return;
-        const { prevHealth, currHealth } = attackEvent;
-        console.log("enemy heatlh", prevHealth, currHealth);
-        this.renderDamageText(prevHealth - currHealth);
+        const { prevHealth, currHealth, attackType } = attackEvent;
+        // 4000 delay time is from Nikke's super attack animation
+        const delayTime =
+          hexToString(attackType as Hex) === "superAttack" ? 4000 : 0;
+        this.scene.time.delayedCall(delayTime, () => {
+          this.renderDamageText(prevHealth - currHealth);
+        });
       },
       { runOnInit: false }
     );
@@ -80,9 +83,9 @@ export class Enemy {
 
   renderDamageText(damage: number) {
     const x = this.enemySpine.x;
-    const y = this.enemySpine.y - 300;
+    const y = this.enemySpine.y - 120;
     const numberOfTexts = 10; // Number of damage texts to create
-    const deviationRange = 100; // Range for random deviation
+    const deviationRange = 30; // Range for random deviation
     const interval = 100; // Interval between each text in milliseconds
 
     for (let i = 0; i < numberOfTexts; i++) {
@@ -94,7 +97,7 @@ export class Enemy {
 
         const text = this.scene.add
           .text(randomX, randomY, `-${damage}`, { color: "#ff0000" })
-          .setScale(3)
+          .setScale(2)
           .setDepth(5)
           .setOrigin(0.5, 0.5);
 
@@ -117,7 +120,8 @@ export class Enemy {
     this.selectedOutline?.destroy();
     const x = this.enemySpine.x;
     const y = this.enemySpine.y;
-    const rect = new Phaser.Geom.Rectangle(-100, -300, 200, 200);
+    const size = 100;
+    const rect = new Phaser.Geom.Rectangle(-size / 2, -size, size, size);
     this.selectedOutline = this.scene.add
       .graphics()
       .lineStyle(5, color)

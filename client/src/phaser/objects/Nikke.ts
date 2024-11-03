@@ -8,7 +8,8 @@ import {
 } from "@dojoengine/recs";
 import { SetupResult } from "../../dojo/setup";
 import { SpineGameObject } from "@esotericsoftware/spine-phaser";
-import { PRAYNSPRAY, SHARPSHOOT } from "../../constants";
+import { PRAYNSPRAY, SHARPSHOOT, SUPERATTACK } from "../../constants";
+import { hexToString, toHex } from "viem";
 
 export class Nikke {
   scene: Phaser.Scene;
@@ -23,6 +24,7 @@ export class Nikke {
 
   coverSpine: SpineGameObject;
   aimSpine: SpineGameObject;
+  standSpine: SpineGameObject;
 
   constructor(
     scene: Phaser.Scene,
@@ -35,33 +37,41 @@ export class Nikke {
     this.scene = scene;
     this.components = components;
     this.network = network;
+    const { HeroCovered, NikkeAttack, EntityType } = this.components;
 
     this.nikke = nikke;
     this.index = index;
     this.isPlayer = isPlayer ?? true;
 
+    // Align with the left of the screen
     const x = (this.scene.scale.width / 5) * (this.index + 1);
     // Align with the bottom of the screen
     const y = (this.scene.scale.height / 4) * 4 - 50;
+
+    const entityType = getComponentValue(EntityType, nikke)?.entityType ?? 0n;
+    console.log("entityType", hexToString(toHex(entityType)));
+    const nikkeType = hexToString(toHex(entityType));
     this.coverSpine = this.scene.add
-      .spine(
-        this.scene.scale.width / 4, // Align with the left of the screen
-        (this.scene.scale.height / 4) * 4, // Align with the bottom of the screen
-        `${nikkeType}_cover_skel`,
-        `${nikkeType}_cover_atlas`
-      )
+      .spine(x, y, `${nikkeType}_cover_skel`, `${nikkeType}_cover_atlas`)
       .setOrigin(0, 1)
-      .setScale(0.18)
+      .setScale(0.16)
       .setDepth(1)
       .setVisible(false);
     this.aimSpine = this.scene.add
       .spine(x, y, `${nikkeType}_aim_skel`, `${nikkeType}_aim_atlas`)
       .setOrigin(0, 1)
       .setDepth(1)
-      .setScale(0.18)
+      .setScale(0.16)
       .setVisible(false);
 
-    const { HeroCovered, NikkeAttack } = this.components;
+    this.standSpine = this.scene.add
+      .spine(x, y + 100, `${nikkeType}_skel`, `${nikkeType}_atlas`)
+      .setOrigin(0, 1)
+      .setScale(0.18)
+      .setDepth(500)
+      .setVisible(false);
+
+    // this.standActionSpine();
 
     this.isCovered =
       getComponentValue(HeroCovered, this.nikke)?.isCovered ?? false;
@@ -87,7 +97,27 @@ export class Nikke {
         this.aimToFire(this.aimSpine, 500);
       } else if (attackType === PRAYNSPRAY) {
         this.prayNSpray(this.coverSpine, this.aimSpine);
+      } else if (attackType === SUPERATTACK) {
+        this.standActionSpine();
       }
+    });
+  }
+
+  standActionSpine() {
+    const background = this.scene.add
+      .rectangle(
+        this.scene.scale.width / 2,
+        this.scene.scale.height / 2,
+        this.scene.scale.width,
+        this.scene.scale.height - 100,
+        0xffffff
+      )
+      .setDepth(200);
+    this.standSpine.setVisible(true);
+    this.standSpine.animationState.setAnimation(0, "action", false);
+    this.scene.time.delayedCall(3500, () => {
+      this.standSpine.setVisible(false);
+      background.destroy();
     });
   }
 

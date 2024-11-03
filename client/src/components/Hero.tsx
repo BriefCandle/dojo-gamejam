@@ -9,7 +9,7 @@ import {
 import { useDojo } from "../dojo/useDojo";
 import { getEntityIdFromKeys } from "@dojoengine/utils";
 import { toHex } from "viem";
-import { PRAYNSPRAY, SHARPSHOOT, TARGET } from "../constants";
+import { PRAYNSPRAY, SHARPSHOOT, SUPERATTACK, TARGET } from "../constants";
 
 export function Heroes() {
   const {
@@ -135,6 +135,21 @@ export function HeroActions({ hero }: { hero: Entity }) {
           Sharpshoot
         </button>
       )}
+      <button
+        className="btn-blue"
+        disabled={!target}
+        onClick={() => {
+          if (!target) return;
+          // const targetId = getComponentValue(Hero, target)?.heroId;
+          // if (!targetId) return;
+          const heroId = getComponentValue(Hero, hero)?.heroId;
+          if (!heroId) return;
+          setComponent(NikkeAttack, hero, { attackType: SUPERATTACK });
+          systemCalls.superAttack(account.account, heroId, BigInt(target));
+        }}
+      >
+        Super
+      </button>
     </div>
   );
 }

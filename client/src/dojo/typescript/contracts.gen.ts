@@ -14,6 +14,27 @@ export async function setupWorld(provider: DojoProvider) {
   function actions() {
     const contract_name = "actions";
 
+    const superAttack = async (props: {
+      account: Account;
+      heroId: bigint;
+      targetId: bigint;
+    }) => {
+      try {
+        return await provider.execute(
+          props.account,
+          {
+            contractName: contract_name,
+            entrypoint: "superAttack",
+            calldata: [props.heroId, props.targetId],
+          },
+          "dojo_starter"
+        );
+      } catch (error) {
+        console.error("Error executing superAttack:", error);
+        throw error;
+      }
+    };
+
     const changeCovered = async (props: {
       account: Account;
       heroId: bigint;
@@ -180,6 +201,7 @@ export async function setupWorld(provider: DojoProvider) {
       mintHero,
       initHeroType,
       world,
+      superAttack,
     };
   }
 

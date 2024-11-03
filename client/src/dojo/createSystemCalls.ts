@@ -25,6 +25,22 @@ export function createSystemCalls(
     }
   };
 
+  const superAttack = async (
+    account: Account,
+    heroId: bigint,
+    targetId: bigint
+  ) => {
+    try {
+      await client.actions.superAttack({
+        account,
+        heroId,
+        targetId,
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   const sharpShoot = async (
     account: Account,
     heroId: bigint,
@@ -111,6 +127,7 @@ export function createSystemCalls(
     initHeroType,
     mintHero,
     prayNSpray,
+    superAttack,
     sharpShoot,
     changeCovered,
   };

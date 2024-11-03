@@ -200,12 +200,13 @@ export function defineContractComponents(world: World) {
           targetId: RecsType.BigInt,
           prevHealth: RecsType.Number,
           currHealth: RecsType.Number,
+          attackType: RecsType.String,
         },
         {
           metadata: {
             namespace: "dojo_starter",
             name: "AttackEvent",
-            types: ["felt252", "felt252", "u32", "u32"],
+            types: ["felt252", "felt252", "u32", "u32", "felt252"],
           },
         }
       );
