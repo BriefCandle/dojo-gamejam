@@ -1,8 +1,15 @@
 import { useComponentValue, useEntityQuery } from "@dojoengine/react";
-import { Entity, getComponentValue, Has, HasValue } from "@dojoengine/recs";
+import {
+  Entity,
+  getComponentValue,
+  Has,
+  HasValue,
+  setComponent,
+} from "@dojoengine/recs";
 import { useDojo } from "../dojo/useDojo";
 import { getEntityIdFromKeys } from "@dojoengine/utils";
 import { toHex } from "viem";
+import { PRAYNSPRAY, SHARPSHOOT, TARGET } from "../constants";
 
 export function Heroes() {
   const {
@@ -64,7 +71,7 @@ export function HeroStats({ hero }: { hero: Entity }) {
 
 export function HeroActions({ hero }: { hero: Entity }) {
   const {
-    clientComponents: { HeroCovered, Hero },
+    clientComponents: { HeroCovered, Hero, NikkeAttack, SelectedHost },
     toriiClient,
     contractComponents,
     client,
@@ -75,32 +82,59 @@ export function HeroActions({ hero }: { hero: Entity }) {
   const playerId = BigInt(account?.account.address);
   const isPlayer = useComponentValue(Hero, hero)?.commander === playerId;
   const isCovered = useComponentValue(HeroCovered, hero)?.isCovered ?? false;
-  const heroId = getComponentValue(Hero, hero)?.heroId;
-  console.log("heroId", heroId, hero, BigInt(hero));
-  console.log("isPlayer", isPlayer, isCovered);
+
+  const target = useComponentValue(SelectedHost, TARGET)?.value;
+
   if (!isPlayer) return null;
   return (
     <div>
       <button
+        className="btn-blue"
         onClick={() => {
           const heroId = getComponentValue(Hero, hero)?.heroId;
           if (!heroId) return;
           const isCommander =
             getComponentValue(Hero, hero)?.commander === playerId;
-          console.log(
-            "take cover",
-            account.account.address,
-            toHex(heroId),
-            toHex(
-              2562296894513420311221999417888358590652528187021096120884908101177557051056n
-            )
-          );
+          console.log("take cover", account.account.address, toHex(heroId));
           systemCalls.changeCovered(account.account, heroId);
         }}
-        className="btn-blue"
       >
         {isCovered ? "Aim" : "Take Cover"}
       </button>
+      {isCovered && (
+        <button
+          className="btn-blue"
+          disabled={!target}
+          onClick={() => {
+            if (!target) return;
+            const heroId = getComponentValue(Hero, hero)?.heroId;
+            if (!heroId) return;
+            setComponent(NikkeAttack, hero, {
+              attackType: PRAYNSPRAY,
+            });
+            systemCalls.prayNSpray(account.account, heroId, BigInt(target));
+          }}
+        >
+          Pray N Spray
+        </button>
+      )}
+      {!isCovered && (
+        <button
+          className="btn-blue"
+          disabled={!target}
+          onClick={() => {
+            if (!target) return;
+            // const targetId = getComponentValue(Hero, target)?.heroId;
+            // if (!targetId) return;
+            const heroId = getComponentValue(Hero, hero)?.heroId;
+            if (!heroId) return;
+            setComponent(NikkeAttack, hero, { attackType: SHARPSHOOT });
+            systemCalls.sharpShoot(account.account, heroId, BigInt(target));
+          }}
+        >
+          Sharpshoot
+        </button>
+      )}
     </div>
   );
 }
