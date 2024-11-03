@@ -1,12 +1,21 @@
 import { useComponentValue } from "@dojoengine/react";
-import { Entity } from "@dojoengine/recs";
+import {
+  Entity,
+  getComponentValue,
+  Has,
+  removeComponent,
+  runQuery,
+  setComponent,
+} from "@dojoengine/recs";
 import { getEntityIdFromKeys } from "@dojoengine/utils";
 import { useEffect, useState } from "react";
 import { useDojo } from "../dojo/useDojo";
+import { Hex, hexToString } from "viem";
+import { OVERLAY } from "../constants";
 
 export function BurnerWallet() {
   const {
-    clientComponents: { Position, Moves },
+    clientComponents: { HeroSpecs, ToggledOn },
     toriiClient,
     contractComponents,
     client,
@@ -18,14 +27,7 @@ export function BurnerWallet() {
   // this fetches the entities from the world and updates the local state
   // useQuerySync(toriiClient, contractComponents as any, []);
 
-  // entity id we are syncing
-
   const playerId = BigInt(account?.account.address);
-  const entityId = getEntityIdFromKeys([playerId]) as Entity;
-
-  // get current component values
-  const position = useComponentValue(Position, entityId);
-  const moves = useComponentValue(Moves, entityId);
 
   const [clipboardStatus, setClipboardStatus] = useState({
     message: "",
@@ -47,6 +49,19 @@ export function BurnerWallet() {
     }
   };
 
+  const heroTypes = [...runQuery([Has(HeroSpecs)])].map(
+    (entity) => getComponentValue(HeroSpecs, entity)!.heroType
+  );
+  // .map((heroType) => hexToString(heroType as Hex));
+  console.log("heroTypes", heroTypes);
+
+  const getNikkeIconPath = (nikkeName: string) => {
+    const nikkePath = "src/assets/nikke";
+    return `${nikkePath}/icons/${nikkeName}_icon.png`;
+  };
+
+  const [selectedType, setSelectedType] = useState(0);
+
   useEffect(() => {
     if (clipboardStatus.message) {
       const timer = setTimeout(() => {
@@ -63,7 +78,10 @@ export function BurnerWallet() {
   // });
 
   return (
-    <div className="bg-gray-900 text-white h-screen opacity-70 pointer-events-auto">
+    <div
+      className="bg-gray-900 text-white h-screen opacity-100 pointer-events-auto"
+      onClick={(e) => e.stopPropagation()}
+    >
       <div className="container mx-auto p-4 sm:p-6 lg:p-10 ">
         <div className="flex flex-wrap gap-2 sm:gap-4">
           <button
@@ -99,39 +117,80 @@ export function BurnerWallet() {
           )}
         </div>
 
-        <div className="bg-gray-800 shadow-md rounded-lg p-4 sm:p-6 mb-4 sm:mb-6 w-full sm:w-96 my-4 sm:my-8">
-          <div className="text-base sm:text-lg font-semibold mb-3 sm:mb-4">{`Burners Deployed: ${account.count}`}</div>
-          <div className="mb-3 sm:mb-4">
-            <label
-              htmlFor="signer-select"
-              className="block text-xs sm:text-sm font-medium text-gray-300 mb-1 sm:mb-2"
-            >
-              Select Signer:
-            </label>
-            <select
-              id="signer-select"
-              className="w-full px-2 py-1 sm:px-3 sm:py-2 text-sm sm:text-base text-gray-200 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              value={account ? account.account.address : ""}
-              onChange={(e) => account.select(e.target.value)}
-            >
-              {account?.list().map((account, index) => (
-                <option value={account.address} key={index}>
-                  {account.address}
-                </option>
-              ))}
-            </select>
+        <div className="flex flex-row">
+          <div className="bg-gray-800 shadow-md rounded-lg p-4 sm:p-6 mb-4 sm:mb-6 w-full sm:w-96 my-4 sm:my-8">
+            <div className="text-base sm:text-lg font-se</div>mibold mb-3 sm:mb-4">{`Burners Deployed: ${account.count}`}</div>
+            <div className="mb-3 sm:mb-4">
+              <label
+                htmlFor="signer-select"
+                className="block text-xs sm:text-sm font-medium text-gray-300 mb-1 sm:mb-2"
+              >
+                Select Signer:
+              </label>
+              <select
+                id="signer-select"
+                className="w-full px-2 py-1 sm:px-3 sm:py-2 text-sm sm:text-base text-gray-200 bg-gray-700 border border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                value={account ? account.account.address : ""}
+                onChange={(e) => account.select(e.target.value)}
+              >
+                {account?.list().map((account, index) => (
+                  <option value={account.address} key={index}>
+                    {account.address}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <button
+                className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-1 px-2 sm:py-2 sm:px-4 text-sm sm:text-base rounded transition duration-300 ease-in-out"
+                onClick={() => account.clear()}
+              >
+                Clear Burners
+              </button>
+            </div>
           </div>
-          <div>
-            <button
-              className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-1 px-2 sm:py-2 sm:px-4 text-sm sm:text-base rounded transition duration-300 ease-in-out"
-              onClick={() => account.clear()}
-            >
-              Clear Burners
-            </button>
+
+          <div className="bg-gray-800 shadow-md rounded-lg p-4 sm:p-6 mb-4 sm:mb-6 w-full sm:w-96 my-4 sm:my-8 ml-5">
+            <div className="flex flex-col gap-4 sm:gap-8">
+              <div className="flex flex-wrap gap-2 sm:gap-4">
+                {heroTypes.map((heroType, index) => (
+                  <div
+                    key={index}
+                    onClick={() => setSelectedType(index)}
+                    className={`cursor-pointer ${
+                      selectedType === index
+                        ? "border-2 border-blue-500 opacity-100 bg-gray-700"
+                        : "hover:border-2 hover:border-gray-500"
+                    }`}
+                  >
+                    <img
+                      src={getNikkeIconPath(hexToString(heroType as Hex))}
+                      alt={heroType}
+                      className="w-20 h-20 sm:w-20 sm:h-20"
+                    />
+                  </div>
+                ))}
+              </div>
+
+              <div className="flex justify-center">
+                <button
+                  className="btn-blue w-1/2"
+                  onClick={async () => {
+                    await systemCalls.mintHero(
+                      account.account,
+                      BigInt(heroTypes[selectedType] as Hex)
+                    );
+                    removeComponent(ToggledOn, OVERLAY);
+                  }}
+                >
+                  Spawn
+                </button>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-4 sm:gap-8">
+        {/* <div className="flex flex-col sm:flex-row gap-4 sm:gap-8">
           <div className="grid grid-cols-3 gap-2 w-full sm:w-48 h-48 bg-gray-700 p-4 rounded-lg shadow-inner">
             <div className="col-start-2">
               <button
@@ -207,7 +266,7 @@ export function BurnerWallet() {
             ))}
           </div>
           <div>Yes, blazingly fast! Every action here is a transaction.</div>
-        </div>
+        </div> */}
       </div>
     </div>
   );
