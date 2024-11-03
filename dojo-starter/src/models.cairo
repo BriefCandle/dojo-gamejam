@@ -176,6 +176,28 @@ pub struct Hero {
     pub mana: u32,   // mp
 }
 
+#[derive(Copy, Drop, Serde)]
+#[dojo::model]
+pub struct HeroCovered {
+    #[key]
+    pub heroId: felt252, 
+    pub isCovered: bool,
+}
+
+#[derive(Copy, Drop, Serde)]
+#[dojo::model]
+#[dojo::event]
+pub struct AttackEvent {
+    #[key]
+    pub heroId: felt252,
+    // future, can do targetIds: Array<felt252>
+    pub targetId: felt252,
+    pub prevHealth: u32,
+    pub currHealth: u32,
+}
+
+
+
 // 记录一个英雄instance有关battle的信息，包括所处battleId，当前round，
 // #[derive(Copy, Drop, Serde)]
 // #[dojo::model]
@@ -201,6 +223,17 @@ pub struct HeroSpecs {
     pub critChance: u32,
     // pub isActived: bool,
     // pub skillTypes: Array<felt252>,
+}
+
+#[derive(Drop, Serde)]
+#[dojo::model]
+pub struct HeroEventMeta {
+    #[key]
+    pub heroType: felt252,  
+    #[key]
+    pub event: felt252,
+    pub imageUrl: ByteArray,
+    pub description: ByteArray,
 }
 
 // #[derive(Drop, Serde)]

@@ -6,7 +6,7 @@ writes = [
     "dojo_starter-Counter",
     "dojo_starter-EntityType",
     "dojo_starter-Battle",
-
-
+    "dojo_starter-HeroEventMeta",
+    "dojo_starter-HeroCovered",
 
 ]
