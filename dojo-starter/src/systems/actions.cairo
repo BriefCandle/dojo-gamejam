@@ -249,10 +249,19 @@ mod actions {
                     maxMana: 100_u32,
                     critChance: 10_u32,
             };
+            let heroSpecs3 = HeroSpecs {
+                    heroType: 'dorothy'_felt252,
+                    attack: 10_u32,
+                    defense: 5_u32,
+                    maxHealth: 100_u32,
+                    maxMana: 100_u32,
+                    critChance: 10_u32,
+            };
             
 
             set!(world, (heroSpecs));
             set!(world, (heroSpecs2));
+            set!(world, (heroSpecs3));
 
             // mintHero(world, heroSpecs.heroType, get_contract_address());
         }
