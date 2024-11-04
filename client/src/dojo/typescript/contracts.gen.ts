@@ -5,83 +5,208 @@ import { DojoProvider } from "@dojoengine/core";
 import { Account, byteArray } from "starknet";
 
 import * as models from "./models.gen";
+import { world } from "../world";
 
 export type IWorld = Awaited<ReturnType<typeof setupWorld>>;
 
 export async function setupWorld(provider: DojoProvider) {
-    // System definitions for `dojo_starter-actions` contract
-    function actions() {
-        const contract_name = "actions";
+  // System definitions for `dojo_starter-actions` contract
+  function actions() {
+    const contract_name = "actions";
 
-        // Call the `spawn` system with the specified Account and calldata
-        const spawn = async (props: { account: Account }) => {
-            try {
-                return await provider.execute(
-                    props.account,
-                    {
-                        contractName: contract_name,
-                        entrypoint: "spawn",
-                        calldata: [],
-                    },
-                    "dojo_starter"
-                );
-            } catch (error) {
-                console.error("Error executing spawn:", error);
-                throw error;
-            }
-        };
+    const superAttack = async (props: {
+      account: Account;
+      heroId: bigint;
+      targetId: bigint;
+    }) => {
+      try {
+        return await provider.execute(
+          props.account,
+          {
+            contractName: contract_name,
+            entrypoint: "superAttack",
+            calldata: [props.heroId, props.targetId],
+          },
+          "dojo_starter"
+        );
+      } catch (error) {
+        console.error("Error executing superAttack:", error);
+        throw error;
+      }
+    };
 
-        // Call the `move` system with the specified Account and calldata
-        const move = async (props: {
-            account: Account;
-            direction: models.Direction;
-        }) => {
-            try {
-                return await provider.execute(
-                    props.account,
-                    {
-                        contractName: contract_name,
-                        entrypoint: "move",
-                        calldata: [
-                            ["None", "Left", "Right", "Up", "Down"].indexOf(
-                                props.direction.type
-                            ),
-                        ],
-                    },
-                    "dojo_starter"
-                );
-            } catch (error) {
-                console.error("Error executing spawn:", error);
-                throw error;
-            }
-        };
+    const changeCovered = async (props: {
+      account: Account;
+      heroId: bigint;
+    }) => {
+      try {
+        return await provider.execute(
+          props.account,
+          {
+            contractName: contract_name,
+            entrypoint: "changeCovered",
+            calldata: [props.heroId],
+          },
+          "dojo_starter"
+        );
+      } catch (error) {
+        console.error("Error executing changeCovered:", error);
+        throw error;
+      }
+    };
 
-        // Call the `world` system with the specified Account and calldata
-        const world = async (props: { account: Account }) => {
-            try {
-                return await provider.execute(
-                    props.account,
-                    {
-                        contractName: contract_name,
-                        entrypoint: "world",
-                        calldata: [],
-                    },
-                    "dojo_starter"
-                );
-            } catch (error) {
-                console.error("Error executing spawn:", error);
-                throw error;
-            }
-        };
+    const sharpShoot = async (props: {
+      account: Account;
+      heroId: bigint;
+      targetId: bigint;
+    }) => {
+      try {
+        return await provider.execute(
+          props.account,
+          {
+            contractName: contract_name,
+            entrypoint: "sharpShoot",
+            calldata: [props.heroId, props.targetId],
+          },
+          "dojo_starter"
+        );
+      } catch (error) {
+        console.error("Error executing sharpShoot:", error);
+        throw error;
+      }
+    };
 
-        return {
-            spawn,
-            move,
-            world,
-        };
-    }
+    const prayNSpray = async (props: {
+      account: Account;
+      heroId: bigint;
+      targetId: bigint;
+    }) => {
+      try {
+        return await provider.execute(
+          props.account,
+          {
+            contractName: contract_name,
+            entrypoint: "prayNSpray",
+            calldata: [props.heroId, props.targetId],
+          },
+          "dojo_starter"
+        );
+      } catch (error) {
+        console.error("Error executing prayNSpray:", error);
+        throw error;
+      }
+    };
+
+    const mintHero = async (props: { account: Account; heroType: bigint }) => {
+      try {
+        return await provider.execute(
+          props.account,
+          {
+            contractName: contract_name,
+            entrypoint: "mintHero",
+            calldata: [props.heroType],
+          },
+          "dojo_starter"
+        );
+      } catch (error) {
+        console.error("Error executing mintHero:", error);
+        throw error;
+      }
+    };
+
+    // const
+
+    // Call the `spawn` system with the specified Account and calldata
+    const spawn = async (props: { account: Account }) => {
+      try {
+        return await provider.execute(
+          props.account,
+          {
+            contractName: contract_name,
+            entrypoint: "spawn",
+            calldata: [],
+          },
+          "dojo_starter"
+        );
+      } catch (error) {
+        console.error("Error executing spawn:", error);
+        throw error;
+      }
+    };
+
+    // Call the `move` system with the specified Account and calldata
+    const move = async (props: {
+      account: Account;
+      direction: models.Direction;
+    }) => {
+      try {
+        return await provider.execute(
+          props.account,
+          {
+            contractName: contract_name,
+            entrypoint: "move",
+            calldata: [
+              ["None", "Left", "Right", "Up", "Down"].indexOf(
+                props.direction.type
+              ),
+            ],
+          },
+          "dojo_starter"
+        );
+      } catch (error) {
+        console.error("Error executing spawn:", error);
+        throw error;
+      }
+    };
+
+    const initHeroType = async (props: {
+      account: Account;
+      heroSpecs: models.HeroSpecs;
+    }) => {
+      await provider.execute(
+        props.account,
+        {
+          contractName: contract_name,
+          entrypoint: "generateHeroSpecs",
+          calldata: [props.heroSpecs],
+        },
+        "dojo_starter"
+      );
+    };
+
+    // Call the `world` system with the specified Account and calldata
+    const world = async (props: { account: Account }) => {
+      try {
+        return await provider.execute(
+          props.account,
+          {
+            contractName: contract_name,
+            entrypoint: "world",
+            calldata: [],
+          },
+          "dojo_starter"
+        );
+      } catch (error) {
+        console.error("Error executing spawn:", error);
+        throw error;
+      }
+    };
 
     return {
-        actions: actions(),
+      changeCovered,
+      prayNSpray,
+      sharpShoot,
+      spawn,
+      move,
+      mintHero,
+      initHeroType,
+      world,
+      superAttack,
     };
+  }
+
+  return {
+    actions: actions(),
+    world,
+  };
 }

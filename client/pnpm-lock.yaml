@@ -22,6 +22,9 @@ dependencies:
   '@dojoengine/utils':
     specifier: 1.0.0-alpha.24
     version: 1.0.0-alpha.24(starknet@6.11.0)(typescript@5.6.2)
+  '@esotericsoftware/spine-phaser':
+    specifier: ~4.1.0
+    version: 4.1.53(phaser@3.86.0)
   '@latticexyz/react':
     specifier: ^2.2.8
     version: 2.2.8(typescript@5.6.2)
@@ -34,6 +37,9 @@ dependencies:
   mobx:
     specifier: ^6.13.2
     version: 6.13.2
+  phaser:
+    specifier: ^3.86.0
+    version: 3.86.0
   proxy-deep:
     specifier: ^3.1.1
     version: 3.1.1
@@ -49,6 +55,9 @@ dependencies:
   starknet:
     specifier: 6.11.0
     version: 6.11.0
+  viem:
+    specifier: ^2.21.37
+    version: 2.21.37(typescript@5.6.2)
   vite-plugin-top-level-await:
     specifier: ^1.4.4
     version: 1.4.4(vite@4.5.5)
@@ -104,6 +113,10 @@ packages:
 
   /@adraffy/ens-normalize@1.10.0:
     resolution: {integrity: sha512-nA9XHtlAkYfJxY7bce8DcN7eKxWWCWkU+1GR9d+U6MbNpfwQp8TI7vqOsBsMcHoT4mBu2kypKoSKnghEzOOq5Q==}
+    dev: false
+
+  /@adraffy/ens-normalize@1.11.0:
+    resolution: {integrity: sha512-/3DDPKHqqIqxUULp8yP4zODUY1i+2xvVWsv8A79xGWdCAG+8sb0hRh0Rk2QyOJUnnbyPUAZYcpBuRe3nS2OIUg==}
     dev: false
 
   /@alloc/quick-lru@5.2.0:
@@ -1076,6 +1089,33 @@ packages:
     resolution: {integrity: sha512-d9zaMRSTIKDLhctzH12MtXvJKSSUhaHcjV+2Z+GK+EEY7XKpP5yR4x+N3TAcHTcu963nIr+TMcCb4DBCYX1z6Q==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
     dev: true
+
+  /@esotericsoftware/spine-canvas@4.1.53:
+    resolution: {integrity: sha512-gUK/QCSM/UKxT3QOKr9MwDn745oujB8vZKte6pbJwzxsJCCxqTERv05B/9vL/9jNrix1pd+tzj0dsDu9ctgJdA==}
+    dependencies:
+      '@esotericsoftware/spine-core': 4.1.53
+    dev: false
+
+  /@esotericsoftware/spine-core@4.1.53:
+    resolution: {integrity: sha512-bMmf8IYbzrn/IcpLWtRZokUyxR3cs55aJSfSvVQ2wBACHLDZ69Bdmr6ZitF3aBtyK8+uFn7C7mBZwxEI3ddtNQ==}
+    dev: false
+
+  /@esotericsoftware/spine-phaser@4.1.53(phaser@3.86.0):
+    resolution: {integrity: sha512-SIJi6U4+hx50yKVHWsE4ooeWbG6rle4HqmjAMw2LXzyir0fReYXnaEKQfbYN07ktWeSRM2D35hYdXNFsGgL1ww==}
+    peerDependencies:
+      phaser: ^3.60.0
+    dependencies:
+      '@esotericsoftware/spine-canvas': 4.1.53
+      '@esotericsoftware/spine-core': 4.1.53
+      '@esotericsoftware/spine-webgl': 4.1.53
+      phaser: 3.86.0
+    dev: false
+
+  /@esotericsoftware/spine-webgl@4.1.53:
+    resolution: {integrity: sha512-Rekk8wKjncD9pZps7aYeOLtSCTk1UA71o3OnAEVk6EWPByaZV0N5LHuEJ5T3BwqmgUZ0gIL0QMT+WGh02r32Pw==}
+    dependencies:
+      '@esotericsoftware/spine-core': 4.1.53
+    dev: false
 
   /@ethersproject/abi@5.7.0:
     resolution: {integrity: sha512-351ktp42TiRcYB3H1OP8yajPeAQstMW/yCFokj/AthP9bLHzQFPlOrxOcwYEDkUAICmOHljvN4K39OMTMUa9RA==}
@@ -3479,6 +3519,14 @@ packages:
       ws: 8.17.1
     dev: false
 
+  /isows@1.0.6(ws@8.18.0):
+    resolution: {integrity: sha512-lPHCayd40oW98/I0uvgaHKWCSvkzY27LjWLbtzOm64yQ+G3Q5npjjbdppU65iZXkK1Zt+kH9pfegli0AYfwYYw==}
+    peerDependencies:
+      ws: '*'
+    dependencies:
+      ws: 8.18.0
+    dev: false
+
   /jackspeak@3.4.3:
     resolution: {integrity: sha512-OGlZQpz2yfahA/Rd1Y8Cd9SIEsqvXkLVoSw/cgwhnhFMDbsQFeZYoJJ7bIZBS9BcamUW96asq/npPWugM+RQBw==}
     dependencies:
@@ -3932,6 +3980,12 @@ packages:
 
   /pathval@1.1.1:
     resolution: {integrity: sha512-Dp6zGqpTdETdR63lehJYPeIOqpiNBNtc7BpWSLrOje7UaIsE5aY92r/AunQA7rsXvet3lrJ3JnZX29UPTKXyKQ==}
+    dev: false
+
+  /phaser@3.86.0:
+    resolution: {integrity: sha512-A7rog3GhXYcWsPimteQmudyY6W0fx0eviOoo9Cwpzae1RPeJBDkhmWv5IFrQO9dL+T907E4dprQPnd2D4WhoEw==}
+    dependencies:
+      eventemitter3: 5.0.1
     dev: false
 
   /picocolors@1.1.1:
@@ -4598,6 +4652,30 @@ packages:
     hasBin: true
     dev: false
 
+  /viem@2.21.37(typescript@5.6.2):
+    resolution: {integrity: sha512-JupwyttT4aJNnP9+kD7E8jorMS5VmgpC3hm3rl5zXsO8WNBTsP3JJqZUSg4AG6s2lTrmmpzS/qpmXMZu5gJw5Q==}
+    peerDependencies:
+      typescript: '>=5.0.4'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
+    dependencies:
+      '@adraffy/ens-normalize': 1.11.0
+      '@noble/curves': 1.6.0
+      '@noble/hashes': 1.5.0
+      '@scure/bip32': 1.5.0
+      '@scure/bip39': 1.4.0
+      abitype: 1.0.6(typescript@5.6.2)
+      isows: 1.0.6(ws@8.18.0)
+      typescript: 5.6.2
+      webauthn-p256: 0.0.10
+      ws: 8.18.0
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+      - zod
+    dev: false
+
   /viem@2.21.6(typescript@5.6.2):
     resolution: {integrity: sha512-YX48IVl6nZ4FRsY4ypv2RrxtQVWysIY146/lBW53tma8u32h8EsiA7vecw9ZbrueNUy/asHR4Egu68Z6FOvDzQ==}
     peerDependencies:
@@ -4820,6 +4898,13 @@ packages:
       - terser
     dev: false
 
+  /webauthn-p256@0.0.10:
+    resolution: {integrity: sha512-EeYD+gmIT80YkSIDb2iWq0lq2zbHo1CxHlQTeJ+KkCILWpVy3zASH3ByD4bopzfk0uCwXxLqKGLqp2W4O28VFA==}
+    dependencies:
+      '@noble/curves': 1.6.0
+      '@noble/hashes': 1.5.0
+    dev: false
+
   /webauthn-p256@0.0.5:
     resolution: {integrity: sha512-drMGNWKdaixZNobeORVIqq7k5DsRC9FnG201K2QjeOoQLmtSDaSsVZdkg6n5jUALJKcAG++zBPJXmv6hy0nWFg==}
     dependencies:
@@ -4912,6 +4997,19 @@ packages:
 
   /ws@8.17.1:
     resolution: {integrity: sha512-6XQFvXTkbfUOZOKKILFG1PDK2NDQs4azKQl26T0YS5CxqWLgXajbPZ+h4gZekJyRqFU8pvnbAbbs/3TgRPy+GQ==}
+    engines: {node: '>=10.0.0'}
+    peerDependencies:
+      bufferutil: ^4.0.1
+      utf-8-validate: '>=5.0.2'
+    peerDependenciesMeta:
+      bufferutil:
+        optional: true
+      utf-8-validate:
+        optional: true
+    dev: false
+
+  /ws@8.18.0:
+    resolution: {integrity: sha512-8VbfWfHLbbwu3+N6OKsOMpBdT4kXPDDB9cJk2bJ6mh9ucxdlnNvH1e+roYkKmN9Nxw2yjz7VzeO9oOz2zJ04Pw==}
     engines: {node: '>=10.0.0'}
     peerDependencies:
       bufferutil: ^4.0.1
