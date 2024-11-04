@@ -53,7 +53,7 @@ function App() {
   return (
     <div className="absolute h-full w-full pointer-events-none">
       {isOverlay && <BurnerWallet />}
-      <Heroes />
+      {!isOverlay && <Heroes />}
     </div>
   );
 }
