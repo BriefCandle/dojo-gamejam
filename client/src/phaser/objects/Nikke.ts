@@ -49,7 +49,6 @@ export class Nikke {
     const y = (this.scene.scale.height / 4) * 4 - 50;
 
     const entityType = getComponentValue(EntityType, nikke)?.entityType ?? 0n;
-    console.log("entityType", hexToString(toHex(entityType)));
     const nikkeType = hexToString(toHex(entityType));
     this.coverSpine = this.scene.add
       .spine(x, y, `${nikkeType}_cover_skel`, `${nikkeType}_cover_atlas`)
