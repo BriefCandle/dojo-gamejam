@@ -41,8 +41,10 @@ sozo build
 sozo migrate apply
 
 # Start Torii
-torii --world 0xc82dfe2cb4f8a90dba1e88dfa24578aeb1c19152d51e3c7cf413be6d65d9e --allowed-origins "*"
+torii --world 0xc82dfe2cb4f8a90dba1e88dfa24578aeb1c19152d51e3c7cf413be6d65d9e --allowed-origins "*" --addr 0.0.0.0:1234
 ```
+
+sozo execute dojo_starter-actions init
 
 ---
 
